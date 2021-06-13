@@ -39,6 +39,8 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
     console.log(req.user);
     const post = await Post.create({
       content: req.body.content,
+      title : req.body.title,
+      subject : req.body.subject,
       img: req.body.url,
       UserId: req.user.id,
     });
@@ -59,5 +61,32 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
     next(error);
   }
 });
+router.route('/:id')
+  .patch(async (req, res, next) => { //게시글 수정
+    try {
+      console.log(req.params.id);
+      const result = await Post.update({
+        content: req.body.content,
+        title : req.body.title,
+        subject : req.body.subject,
+      }, {
+        where: { id: req.params.id },
+      });
+      console.log('result');
+      res.json(result);
+    } catch (err) {
+      console.error(err);
+      next(err);
+      }
+    })
+    .delete(async (req, res, next) => { //게시글 삭제
+      try {
+        const result = await Post.destroy({ where: { id: req.params.id } });
+        res.json(result);
+      } catch (err) {
+        console.error(err);
+        next(err);
+      }
+    });
 
 module.exports = router;
