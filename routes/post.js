@@ -62,8 +62,9 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
     next(error);
   }
 });
+
 router.route('/:id')
-  .patch(async (req, res, next) => { //게시글 수정
+  .patch(async (req, res, next) => { //등록한 책 정보 수정
     try {
       console.log(req.params.id);
       const result = await Book.update({
@@ -80,7 +81,7 @@ router.route('/:id')
       next(err);
       }
     })
-    .delete(async (req, res, next) => { //게시글 삭제
+    .delete(async (req, res, next) => { //등록한 책 삭제
       try {
         const result = await Book.destroy({ where: { id: req.params.id } });
         res.json(result);
@@ -89,8 +90,10 @@ router.route('/:id')
         next(err);
       }
     });
+
+//게시글 상태 수정 -1
 router.route('/:id/state1')
-  .patch(async (req, res, next) => { //게시글 수정
+  .patch(async (req, res, next) => { 
     try {
       console.log(req.params.id);
       const result = await Book.update({
@@ -105,8 +108,10 @@ router.route('/:id/state1')
       next(err);
       }
     });
+
+//게시글 상태 수정 -2
 router.route('/:id/state2')
-  .patch(async (req, res, next) => { //게시글 수정
+  .patch(async (req, res, next) => { 
     try {
       console.log(req.params.id);
       const result = await Book.update({
@@ -121,8 +126,9 @@ router.route('/:id/state2')
       next(err);
       }
     });
+//게시글 상태 수정 -3
 router.route('/:id/state3')
-  .patch(async (req, res, next) => { //게시글 수정
+  .patch(async (req, res, next) => { 
     try {
       console.log(req.params.id);
       const result = await Book.update({

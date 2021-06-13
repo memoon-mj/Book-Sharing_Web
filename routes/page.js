@@ -11,6 +11,7 @@ router.use((req, res, next) => {
   res.locals.followerIdList = req.user ? req.user.Followings.map(f => f.id) : [];
   next();
 });
+//내 서재 - 책 등록
 router.get('/submit', async (req, res, next) => {
   try {
     const books = await Book.findAll({
@@ -32,32 +33,17 @@ router.get('/submit', async (req, res, next) => {
   }
 });
 
+//profile 정보 보기
 router.get('/profile', isLoggedIn, (req, res) => {
-  res.render('profile', { title: '내 정보 - NodeBird' });
+  res.render('profile', { title: '내 정보' });
 });
 
+//회원 가입
 router.get('/join', isNotLoggedIn, (req, res) => {
-  res.render('join', { title: '회원가입 - NodeBird' });
+  res.render('join', { title: '회원가입' });
 });
 
-// router.get('/', async (req, res, next) => {
-//   try {
-//     const books = await Book.findAll({
-//       include: {
-//         model: User,
-//         attributes: ['id', 'nick'],
-//       },
-//       order: [['createdAt', 'DESC']],
-//     });
-//     res.render('main', {
-//       title: 'NodeBird',
-//       twits: books,
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     next(err);
-//   }
-// });
+//메인 화면 진입
 router.get('/', async (req, res, next) => {
   try {
     const books = await Book.findAll({
@@ -76,11 +62,13 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+//login 화면 이동
 router.get('/login',async(req,res,next) => {
     res.render('login', {
     });
 })
 
+//해시태그 검색
 router.get('/hashtag', async (req, res, next) => {
   const query = req.query.hashtag;
   if (!query) {
@@ -94,7 +82,7 @@ router.get('/hashtag', async (req, res, next) => {
     }
 
     return res.render('home', {
-      title: `${query} | NodeBird`,
+      title: `${query}`,
       twits: books,
     });
   } catch (error) {
@@ -102,7 +90,7 @@ router.get('/hashtag', async (req, res, next) => {
     return next(error);
   }
 });
-
+//마이페이지 이동
 router.get('/mypage',isLoggedIn, (req, res)=> {
   try {
     res.render('mypage');

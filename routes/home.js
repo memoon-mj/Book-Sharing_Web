@@ -4,6 +4,7 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
+//메인화면 시작
 router.get('/', async (req, res, next) => {
     try {
       const books = await Book.findAll({
