@@ -2,21 +2,21 @@
   "development": {
     "username": "root",
     "password": "aa0609aa",
-    "database": "sns",
+    "database": "bookshare",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "aa0609aa",
-    "database": "sns",
+    "database": "bookshare",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "aa0609aa",
-    "database": "sns",
+    "database": "bookshare",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }

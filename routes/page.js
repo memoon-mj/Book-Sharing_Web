@@ -1,6 +1,6 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const { Post, User, Hashtag } = require('../models');
+const { Book, User, Hashtag } = require('../models');
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.use((req, res, next) => {
 });
 router.get('/submit', async (req, res, next) => {
   try {
-    const posts = await Post.findAll({
+    const books = await Book.findAll({
       where : {UserId : req.user.id },
       include: {
         model: User,
@@ -23,11 +23,12 @@ router.get('/submit', async (req, res, next) => {
     });
     res.render('submit', {
       title: 'NodeBird',
-      twits: posts,
+      twits: books,
     });
   } catch (err) {
-    console.error(err);
-    next(err);
+    res.render('login_error');
+    // console.error(err);
+    // next(err);
   }
 });
 
@@ -39,24 +40,46 @@ router.get('/join', isNotLoggedIn, (req, res) => {
   res.render('join', { title: '회원가입 - NodeBird' });
 });
 
+// router.get('/', async (req, res, next) => {
+//   try {
+//     const books = await Book.findAll({
+//       include: {
+//         model: User,
+//         attributes: ['id', 'nick'],
+//       },
+//       order: [['createdAt', 'DESC']],
+//     });
+//     res.render('main', {
+//       title: 'NodeBird',
+//       twits: books,
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     next(err);
+//   }
+// });
 router.get('/', async (req, res, next) => {
   try {
-    const posts = await Post.findAll({
+    const books = await Book.findAll({
       include: {
         model: User,
         attributes: ['id', 'nick'],
       },
       order: [['createdAt', 'DESC']],
     });
-    res.render('main', {
-      title: 'NodeBird',
-      twits: posts,
+    res.render('home', {
+      twits: books,
     });
   } catch (err) {
     console.error(err);
     next(err);
   }
 });
+
+router.get('/login',async(req,res,next) => {
+    res.render('login', {
+    });
+})
 
 router.get('/hashtag', async (req, res, next) => {
   const query = req.query.hashtag;
@@ -65,19 +88,28 @@ router.get('/hashtag', async (req, res, next) => {
   }
   try {
     const hashtag = await Hashtag.findOne({ where: { title: query } });
-    let posts = [];
+    let books = [];
     if (hashtag) {
-      posts = await hashtag.getPosts({ include: [{ model: User }] });
+      books = await hashtag.getBooks({ include: [{ model: User }] });
     }
 
     return res.render('home', {
       title: `${query} | NodeBird`,
-      twits: posts,
+      twits: books,
     });
   } catch (error) {
     console.error(error);
     return next(error);
   }
 });
+
+router.get('/mypage',isLoggedIn, (req, res)=> {
+  try {
+    res.render('mypage');
+  } catch (error) {
+    res.render('mypage_error');
+  }
+
+})
 
 module.exports = router;

@@ -1,9 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+  <div class = 'main1'>
     <div class="timeline">
       {% if user %}
-        <div>
+        <div class = 'submit_main'>
+          <h2>책 등록하기</h2>
           <form id="twit-form" action="/post" method="post" enctype="multipart/form-data">
             <div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">제목</label>
@@ -25,48 +27,56 @@
               <input id="img-url" type="hidden" name="url">
             </div>
             <div>
-              <label id="img-label" for="img">사진 업로드</label>
+              <label id="img-label" for="img">책 사진 업로드</label>
               <input id="img" type="file" accept="image/*">
-              <button id="twit-btn" type="submit" class="btn">짹짹</button>
+              <button id="twit-btn" type="submit" class="btn">등록</button>
             </div>
           </form>
-        </div>
       {% endif %}
-      <div class="twits">
+      <div class = 'search'>
         <form id="hashtag-form" action="/hashtag">
           <input type="text" name="hashtag" placeholder="태그 검색">
           <button class="btn">검색</button>
         </form>
-        <div id = 'book_list'>
-        {% for twit in twits %}
-          <div class="twit" method = "post">
-            <input type="hidden" value="{{twit.User.id}}" class="twit-user-id">
-            <input type="hidden" value="{{twit.id}}" class="twit-id">
-            <div class="twit-author">{{twit.User.nick}}</div>
-            {% if not followerIdList.includes(twit.User.id) and twit.User.id !== user.id %}
-              <button class="twit-follow">팔로우하기</button>
-            {% endif %}
-            <div class="twit-content">
-              {{twit.title}}
-            </div>
-            <div class="twit-content">
-              {{twit.subject}}
-            </div>
-            <div class="twit-content">
-              {{twit.content}}
-            </div>
-            {% if twit.img %}
-              <div class="twit-img"><img src="{{twit.img}}" alt="섬네일"></div>
-            {% endif %}
-            <div>
-              <button class="delete" id = 'delete' role="button">삭제</a>
-              <button class="edit" id = 'edit' role="button">수정</a>
-            </div>
+      </div>
+    <h2>내 책 보기</h2>
+  </div>
+  <div class="twits">
+    {% for twit in twits %}
+      <div class="twit" method = "post">
+        <input type="hidden" value="{{twit.User.id}}" class="twit-user-id">
+        <input type="hidden" value="{{twit.id}}" class="twit-id">
+        {% if twit.img %}
+        <div class="twit-img"><img src="{{twit.img}}" alt="섬네일"></div>
+        {% endif %}
+        <div class = 'detail_div'>
+          <div class="twit-content">
+            {{twit.title}}
+          </div>
+          <div class="twit-content">
+            {{twit.subject}}
+          </div>
+          <div class="twit-content">
+            {{twit.content}}
           </div>
         </div>
-        {% endfor %}
+        <div class = 'state'>
+          <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            상태
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item state1">빌려감</a></li>
+            <li><a class="dropdown-item state2">빌려줄 수 있음</a></li>
+            <li><a class="dropdown-item state3">빌려줄 수 없음</a></li>
+          </ul>
+          <button class="btn btn-dark edit" id = 'edit' role="button">수정</a>
+          <button class="btn btn-danger delete" id = 'delete' role="button">삭제</a>
+        </div>
       </div>
+      {% endfor %}
     </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block script %}

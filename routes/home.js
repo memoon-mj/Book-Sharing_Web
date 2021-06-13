@@ -1,12 +1,12 @@
 const express = require('express');
-const { Post, User, Hashtag } = require('../models');
+const { Book, User, Hashtag } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-router.get('/', isLoggedIn, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     try {
-      const posts = await Post.findAll({
+      const books = await Book.findAll({
         include: {
           model: User,
           attributes: ['id', 'nick'],
@@ -14,7 +14,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
         order: [['createdAt', 'DESC']],
       });
       res.render('home', {
-        twits: posts,
+        twits: books,
       });
     } catch (err) {
       console.error(err);

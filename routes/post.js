@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { Post, Hashtag } = require('../models');
+const { Book, Hashtag } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
@@ -37,12 +37,13 @@ const upload2 = multer();
 router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
   try {
     console.log(req.user);
-    const post = await Post.create({
+    const book = await Book.create({
       content: req.body.content,
       title : req.body.title,
       subject : req.body.subject,
       img: req.body.url,
       UserId: req.user.id,
+      borrow: '신규 등록',
     });
     const hashtags = req.body.content.match(/#[^\s#]*/g);
     if (hashtags) {
@@ -53,7 +54,7 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
           })
         }),
       );
-      await post.addHashtags(result.map(r => r[0]));
+      await book.addHashtags(result.map(r => r[0]));
     }
     res.redirect('/submit');
   } catch (error) {
@@ -65,7 +66,7 @@ router.route('/:id')
   .patch(async (req, res, next) => { //게시글 수정
     try {
       console.log(req.params.id);
-      const result = await Post.update({
+      const result = await Book.update({
         content: req.body.content,
         title : req.body.title,
         subject : req.body.subject,
@@ -81,12 +82,60 @@ router.route('/:id')
     })
     .delete(async (req, res, next) => { //게시글 삭제
       try {
-        const result = await Post.destroy({ where: { id: req.params.id } });
+        const result = await Book.destroy({ where: { id: req.params.id } });
         res.json(result);
       } catch (err) {
         console.error(err);
         next(err);
       }
     });
-
+router.route('/:id/state1')
+  .patch(async (req, res, next) => { //게시글 수정
+    try {
+      console.log(req.params.id);
+      const result = await Book.update({
+        borrow: req.body.borrow,
+      }, {
+        where: { id: req.params.id },
+      });
+      console.log('result');
+      res.json(result);
+    } catch (err) {
+      console.error(err);
+      next(err);
+      }
+    });
+router.route('/:id/state2')
+  .patch(async (req, res, next) => { //게시글 수정
+    try {
+      console.log(req.params.id);
+      const result = await Book.update({
+        borrow: req.body.borrow,
+      }, {
+        where: { id: req.params.id },
+      });
+      console.log('result');
+      res.json(result);
+    } catch (err) {
+      console.error(err);
+      next(err);
+      }
+    });
+router.route('/:id/state3')
+  .patch(async (req, res, next) => { //게시글 수정
+    try {
+      console.log(req.params.id);
+      const result = await Book.update({
+        borrow: req.body.borrow,
+      }, {
+        where: { id: req.params.id },
+      });
+      console.log('result');
+      res.json(result);
+    } catch (err) {
+      console.error(err);
+      next(err);
+      }
+    });
+  
 module.exports = router;
